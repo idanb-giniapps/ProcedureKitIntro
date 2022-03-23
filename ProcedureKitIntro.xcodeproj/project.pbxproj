@@ -13,6 +13,8 @@
 		EE4A5C5927EA0863000009FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE4A5C5727EA0863000009FD /* Main.storyboard */; };
 		EE4A5C5B27EA0864000009FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EE4A5C5A27EA0864000009FD /* Assets.xcassets */; };
 		EE4A5C5E27EA0864000009FD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE4A5C5C27EA0864000009FD /* LaunchScreen.storyboard */; };
+		EE4A5C6727EA08AF000009FD /* ProcedureKit in Frameworks */ = {isa = PBXBuildFile; productRef = EE4A5C6627EA08AF000009FD /* ProcedureKit */; };
+		EE4A5C6927EA08C5000009FD /* Procedures.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4A5C6827EA08C5000009FD /* Procedures.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,7 @@
 		EE4A5C5A27EA0864000009FD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EE4A5C5D27EA0864000009FD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EE4A5C5F27EA0864000009FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EE4A5C6827EA08C5000009FD /* Procedures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Procedures.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE4A5C6727EA08AF000009FD /* ProcedureKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +67,7 @@
 				EE4A5C5A27EA0864000009FD /* Assets.xcassets */,
 				EE4A5C5C27EA0864000009FD /* LaunchScreen.storyboard */,
 				EE4A5C5F27EA0864000009FD /* Info.plist */,
+				EE4A5C6827EA08C5000009FD /* Procedures.swift */,
 			);
 			path = ProcedureKitIntro;
 			sourceTree = "<group>";
@@ -83,6 +88,9 @@
 			dependencies = (
 			);
 			name = ProcedureKitIntro;
+			packageProductDependencies = (
+				EE4A5C6627EA08AF000009FD /* ProcedureKit */,
+			);
 			productName = ProcedureKitIntro;
 			productReference = EE4A5C4E27EA0863000009FD /* ProcedureKitIntro.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +119,9 @@
 				Base,
 			);
 			mainGroup = EE4A5C4527EA0863000009FD;
+			packageReferences = (
+				EE4A5C6527EA08AF000009FD /* XCRemoteSwiftPackageReference "ProcedureKit" */,
+			);
 			productRefGroup = EE4A5C4F27EA0863000009FD /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -141,6 +152,7 @@
 				EE4A5C5627EA0863000009FD /* ViewController.swift in Sources */,
 				EE4A5C5227EA0863000009FD /* AppDelegate.swift in Sources */,
 				EE4A5C5427EA0863000009FD /* SceneDelegate.swift in Sources */,
+				EE4A5C6927EA08C5000009FD /* Procedures.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +368,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EE4A5C6527EA08AF000009FD /* XCRemoteSwiftPackageReference "ProcedureKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ArkadiGiniApps/ProcedureKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EE4A5C6627EA08AF000009FD /* ProcedureKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EE4A5C6527EA08AF000009FD /* XCRemoteSwiftPackageReference "ProcedureKit" */;
+			productName = ProcedureKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EE4A5C4627EA0863000009FD /* Project object */;
 }
