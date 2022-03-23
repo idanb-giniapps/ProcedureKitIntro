@@ -10,6 +10,8 @@ import ProcedureKit
 
 /// ProcedureKit is a Swift framework inspired by WWDC 2015 Advanced NSOperations session.
 /// It provides a framework to manage and synchronize asynchronous, parallel operations.
+///
+/// **BEFORE YOU CONTINUE**, please go watch the talk: https://developer.apple.com/videos/play/wwdc2015/226/
 
 // MARK: - Mock Error enum Definition
 
