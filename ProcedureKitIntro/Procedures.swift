@@ -443,6 +443,7 @@ class SquareARandomNumberGroupProcedure2: GroupProcedure, OutputProcedure {
     }
 }
 
+// usage
 func squareARandomNumber() {
     
     let groupProcedure = SquareARandomNumberGroupProcedure(delay: 2)
