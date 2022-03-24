@@ -181,7 +181,7 @@ func sayHelloToAliceAndBobWithGroupProcedure() {
 /// Key points
 /// - `GroupProcedure` is a subclass of `Procedure`. it can do all the things a procedure can do, it can have block observers, dependencies etc.
 /// - Group Procedures have an underlying queue.
-/// - We subclass `GroupProcedure`
+/// - While we subclass `GroupProcedure` here, it can be used directly.
 /// - We do not call `finish()` on a group procedure. it is finished when all children are finished. Calling `finish()` on a group procedure will trigger an assertion failure.
 /// - If one child finished with error, the entire group procedure will finish with the same error.
 /// - Illustration of a group procedure with 4 child procedures in a queue with a preceding and a subsequent procedures:
@@ -387,12 +387,18 @@ class SquareARandomNumberGroupProcedure: GroupProcedure, OutputProcedure {
     
     init(delay: Int) {
         
-        self.mockRequestProcedure    = MockNetworkRequestProcedure(delay: delay)
-        self.parseProcedure          = ExampleParsingProcedure<Int>()
-        self.squareNumberProcedure   = SquareANumberProcedure()
+        mockRequestProcedure    = MockNetworkRequestProcedure(delay: delay)
+        parseProcedure          = ExampleParsingProcedure<Int>()
+        squareNumberProcedure   = SquareANumberProcedure()
         
-        parseProcedure.addDependency(mockRequestProcedure)
-        squareNumberProcedure.addDependency(parseProcedure)
+        /// the `injectResult(from:)` API is defined in a public extension on `InputProcedure`. But, what does it do?
+                
+        /// `mockRequestProcedure` is automatically added as a dependency of `parseProcedure`
+        /// A will finish block observer is added to the dependency to take its output, and set it as the processing procedure's input. This happens before`mockRequestProcedure` finishes, and therefore before the `parseProcedure` becomes ready.
+        
+        /// Note: There is a constraint on injectResult(from:) where the dependency, which conforms to `OutputProcedure`, has an `Output` type which is equal to the `InputProcedure`'s `Input` type. Essentially, input has to equal output.
+        parseProcedure.injectResult(from: mockRequestProcedure)
+        squareNumberProcedure.injectResult(from: parseProcedure)
         
         super.init(operations: [mockRequestProcedure, parseProcedure, squareNumberProcedure])
         
@@ -404,31 +410,43 @@ class SquareARandomNumberGroupProcedure: GroupProcedure, OutputProcedure {
         /// when we write `procedureA.bind(to: procedureB)` we are basically saying "when the `input` of `procedureA` is set, set the `input` of `procedureB` to the `input` of `procedureA`"
         bind(from: squareNumberProcedure)
     }
+}
+
+/// 4. another way to do the group procedure.
+/// There exists a school of thought that frowns upon having all of the logic inside the initializer.
+/// So here's a different way of implementing the same group procedure while keeping the initializer clean.
+class SquareARandomNumberGroupProcedure2: GroupProcedure, OutputProcedure {
+    var output: Pending<ProcedureResult<Int>> = .pending
     
-    override func child(_ child: Procedure,
-                        willFinishWithError childError: Error?) {
+    private let delay: Int
+    
+    init(delay: Int) {
+        self.delay = delay
+        super.init(operations: [])
+    }
+    
+    override func execute() {
+        defer { super.execute() }
         
-        super.child(child, willFinishWithError: childError)
+        guard !isCancelled else { return }
         
-        if let childError = childError {
-            cancel(with: childError)
-            return
-        }
+        let mockRequestProcedure    = MockNetworkRequestProcedure(delay: delay)
+        let parseProcedure          = ExampleParsingProcedure<Int>()
+        let squareProcedure         = SquareANumberProcedure()
         
-        if child === mockRequestProcedure {
-            let data = mockRequestProcedure.output.value!.value! // force unwrapping is probably ok because we know that no error has occurred, but in a production app you might want to handle that with a little more grace.
-            parseProcedure.input = .ready(data)
-        }
-        else if child === parseProcedure {
-            let number = parseProcedure.output.value!.value!
-            squareNumberProcedure.input = .ready(number)
-        }
+        parseProcedure.injectResult(from: mockRequestProcedure)
+        squareProcedure.injectResult(from: parseProcedure)
+        
+        bind(from: squareProcedure)
+        
+        addChildren(mockRequestProcedure, parseProcedure, squareProcedure)
     }
 }
 
-// usage
 func squareARandomNumber() {
-    let groupProcedure = SquareARandomNumberGroupProcedure(delay: 3)
+    
+    let groupProcedure = SquareARandomNumberGroupProcedure(delay: 2)
+//    let groupProcedure = SquareARandomNumberGroupProcedure2(delay: 2)
     
     groupProcedure.addDidFinishBlockObserver { procedure, error in
         
@@ -448,3 +466,4 @@ func squareARandomNumber() {
     
     procedureQueue.addOperation(groupProcedure)
 }
+
