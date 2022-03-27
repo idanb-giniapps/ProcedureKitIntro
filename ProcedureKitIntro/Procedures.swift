@@ -97,6 +97,8 @@ func sayHelloToAliceAndBob() {
     
     // the line below will cause a deadlock
 //    helloAlice.addDependency(helloBob)
+    
+    procedureQueue.addOperation(helloBob)
         
     DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
         procedureQueue.addOperation(helloAlice)
